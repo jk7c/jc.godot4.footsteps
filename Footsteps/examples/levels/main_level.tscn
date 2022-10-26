@@ -1,8 +1,15 @@
-[gd_scene load_steps=15 format=3 uid="uid://c1rh74yjtneb8"]
+[gd_scene load_steps=22 format=3 uid="uid://c1rh74yjtneb8"]
 
 [ext_resource type="Texture2D" uid="uid://ds8tfs1v3gxpu" path="res://examples/content/third-party/kenney-assets/PNG/Green/texture_09.png" id="1_4j1d1"]
 [ext_resource type="Texture2D" uid="uid://dlemyiwrexxl8" path="res://examples/content/third-party/kenney-assets/PNG/Light/texture_07.png" id="2_nla2h"]
 [ext_resource type="Texture2D" uid="uid://qotptfx8xhdm" path="res://examples/content/third-party/kenney-assets/PNG/Orange/texture_09.png" id="3_ae5ro"]
+[ext_resource type="Script" path="res://addons/jc.footsteps/scr/footsteps.gd" id="3_xurbb"]
+[ext_resource type="Script" path="res://examples/scr/fp_character.gd" id="4_06q8q"]
+[ext_resource type="Resource" uid="uid://dhumwog0pdj20" path="res://examples/data/dirt_footsteps_surface.res" id="4_ciobp"]
+[ext_resource type="Resource" uid="uid://dx8bc7tp22l0g" path="res://examples/data/default_footsteps_surface_audio.res" id="4_ih820"]
+[ext_resource type="Script" path="res://examples/scr/fp_camera.gd" id="5_4c7tp"]
+[ext_resource type="Resource" uid="uid://cmaukrrm4t62h" path="res://examples/data/grass_footsteps_surface.res" id="5_edkw3"]
+[ext_resource type="Resource" uid="uid://cd7ber41g4hyx" path="res://examples/data/wood_footsteps_surface.res" id="6_lp8yi"]
 
 [sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_3me1b"]
 rayleigh_coefficient = 0.54
@@ -21,6 +28,8 @@ sky = SubResource("Sky_wbdlw")
 tonemap_mode = 3
 tonemap_white = 6.0
 
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_lhja6"]
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_onjuh"]
 albedo_color = Color(0, 0.47451, 0.0235294, 1)
 albedo_texture = ExtResource("1_4j1d1")
@@ -28,7 +37,7 @@ uv1_scale = Vector3(1000, 1000, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_qafhi"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_0j8s1"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_hnf5o"]
 size = Vector3(1000, 1, 1000)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y6unt"]
@@ -46,8 +55,6 @@ albedo_color = Color(0.541176, 0.462745, 0.427451, 1)
 albedo_texture = ExtResource("3_ae5ro")
 uv1_scale = Vector3(5, 5, 5)
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_lhja6"]
-
 [node name="Main" type="Node3D"]
 
 [node name="Environment" type="Node" parent="."]
@@ -58,22 +65,56 @@ environment = SubResource("Environment_7geap")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Environment"]
 transform = Transform3D(0.703581, 0.250918, -0.664842, 0.710615, -0.248434, 0.65826, -1.62499e-08, -0.935586, -0.353099, 0, 20.8941, 13.5935)
 
+[node name="FPCharacter" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.99095, 8.81226, 0)
+floor_block_on_wall = false
+script = ExtResource("4_06q8q")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FPCharacter"]
+shape = SubResource("CapsuleShape3D_lhja6")
+
+[node name="CameraPos" type="Marker3D" parent="FPCharacter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.725161, 0.209258)
+
+[node name="CameraRig" type="Node3D" parent="FPCharacter" node_paths=PackedStringArray("target", "camera")]
+script = ExtResource("5_4c7tp")
+target = NodePath("../CameraPos")
+camera = NodePath("Camera3D")
+
+[node name="Camera3D" type="Camera3D" parent="FPCharacter/CameraRig"]
+
+[node name="Footsteps" type="Node3D" parent="FPCharacter" node_paths=PackedStringArray("audio_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.79554, 0)
+script = ExtResource("3_xurbb")
+surfaces = [ExtResource("4_ciobp"), ExtResource("5_edkw3"), ExtResource("6_lp8yi")]
+audio_player = NodePath("AudioStreamPlayer3D")
+surface_meta_id = "surface"
+default_clips = ExtResource("4_ih820")
+bus_index = 1
+enable_pan = true
+pan_index = 0
+enable_pitch = false
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="FPCharacter/Footsteps"]
+max_distance = 4.88
+bus = &"Footsteps"
+
 [node name="Structures" type="Node3D" parent="."]
 
 [node name="Floor" type="StaticBody3D" parent="Structures"]
-transform = Transform3D(1000, 0, 0, 0, 1, 0, 0, 0, 1000, 0, 0, 0)
 metadata/surface = ExtResource("1_4j1d1")
 
 [node name="Mesh" type="MeshInstance3D" parent="Structures/Floor"]
+transform = Transform3D(1000, 0, 0, 0, 1, 0, 0, 0, 1000, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_onjuh")
 mesh = SubResource("BoxMesh_qafhi")
 skeleton = NodePath("../../..")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Structures/Floor"]
-shape = SubResource("BoxShape3D_0j8s1")
+shape = SubResource("BoxShape3D_hnf5o")
 
 [node name="Dirt" type="StaticBody3D" parent="Structures"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55529, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.46369, 0)
 metadata/surface = ExtResource("2_nla2h")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Structures/Dirt"]
@@ -85,7 +126,7 @@ mesh = SubResource("BoxMesh_2f0nt")
 shape = SubResource("BoxShape3D_gsqyi")
 
 [node name="Wood" type="StaticBody3D" parent="Structures"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55529, 10.2637)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.46369, 10.2637)
 metadata/surface = ExtResource("3_ae5ro")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Structures/Wood"]
@@ -97,7 +138,7 @@ mesh = SubResource("BoxMesh_2f0nt")
 shape = SubResource("BoxShape3D_gsqyi")
 
 [node name="Default" type="StaticBody3D" parent="Structures"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55529, 20.6359)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.46369, 20.6359)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Structures/Default"]
 transform = Transform3D(10, 0, 0, 0, 0.2, 0, 0, 0, 10, 0, 0, 0)
@@ -105,23 +146,3 @@ mesh = SubResource("BoxMesh_2f0nt")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Structures/Default"]
 shape = SubResource("BoxShape3D_gsqyi")
-
-[node name="FPCharacter" type="CharacterBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.3785, 8.81226, 0)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="FPCharacter"]
-shape = SubResource("CapsuleShape3D_lhja6")
-
-[node name="CameraPos" type="Marker3D" parent="FPCharacter"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.725161, 0.209258)
-
-[node name="CameraRig" type="Node3D" parent="FPCharacter"]
-
-[node name="Camera3D" type="Camera3D" parent="FPCharacter/CameraRig"]
-
-[node name="Footsteps" type="Node3D" parent="FPCharacter"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.79554, 0)
-
-[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="FPCharacter/Footsteps"]
-max_distance = 4.88
-bus = &"Footsteps"
