@@ -69,7 +69,6 @@ func _unhandled_input(event: InputEvent) -> void:
 	)
 	_is_sprinting = Input.get_action_strength("sprint") > 0.0
 
-
 func _compute_speed_mul() -> void:
 	_speed_mul = sprint_speed if _is_sprinting else walk_speed
 	_internal_jump_force = (jump_force + velocity.length()) * 0.7
@@ -90,7 +89,6 @@ func _yaw(delta: float) -> void:
 	transform.basis = transform.basis.from_euler(Vector3.UP * look.angle())
 
 func _physics_process(delta: float) -> void:
-	
 	# Add gravity
 	if !is_on_floor():
 		_add_gravity_force(_get_gravity_force, delta)
@@ -114,4 +112,3 @@ func _physics_process(delta: float) -> void:
 	_yaw(delta)
 	
 	move_and_slide()
-	
