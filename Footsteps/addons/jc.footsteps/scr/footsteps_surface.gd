@@ -4,7 +4,7 @@ class_name FootstepsSurface extends FootstepsSurfaceAudio
 @export_group("Surface List")
 @export var surface_textures: Array[Texture]
 
-func exist(texture: Texture) -> bool:
+func exists(texture: Texture) -> bool:
 	if texture == null:
 		return false
 	

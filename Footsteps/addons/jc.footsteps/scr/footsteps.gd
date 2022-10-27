@@ -182,7 +182,7 @@ func _play_audio_player(clip: AudioStream, panner: bool) -> void:
 func _play_surface_clips(panner: bool) -> void:
 	if surfaces.size() > 0:
 		for surface in surfaces:
-			if surface.exist(_current_surface_texture):
+			if surface.exists(_current_surface_texture):
 				_default_surface = false
 				_min_unit_size = surface.min_unit_size
 				_max_unit_size = surface.max_unit_size

@@ -27,7 +27,6 @@ var yaw_rotation: float = 0.0:
 	get: return yaw_rotation
 	set(value):
 		yaw_rotation = value
-		
 
 # Gravity.
 @export var gravity_modifier: float = 2.0:
@@ -98,7 +97,6 @@ func _physics_process(delta: float) -> void:
 	_move_dir = _move_dir.rotated(Vector3.UP, yaw_rotation).normalized()
 	
 	_compute_speed_mul()
-	
 	if is_on_floor():
 		velocity.x = _move_dir.x * _speed_mul
 		velocity.z = _move_dir.z * _speed_mul
@@ -110,5 +108,4 @@ func _physics_process(delta: float) -> void:
 			_jump()
 	
 	_yaw(delta)
-	
 	move_and_slide()

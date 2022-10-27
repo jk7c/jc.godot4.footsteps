@@ -63,7 +63,7 @@ uv1_scale = Vector3(5, 5, 5)
 environment = SubResource("Environment_7geap")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Environment"]
-transform = Transform3D(0.703581, 0.250918, -0.664842, 0.710615, -0.248434, 0.65826, -1.62499e-08, -0.935586, -0.353099, 0, 20.8941, 13.5935)
+transform = Transform3D(0.964907, 0.0927215, -0.245678, 0.262593, -0.340708, 0.902753, -2.92497e-08, -0.935586, -0.3531, 0, 20.8941, 13.5935)
 
 [node name="FPCharacter" type="CharacterBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.99095, 8.81226, 0)
