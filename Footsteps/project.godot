@@ -12,27 +12,27 @@ _global_script_classes=[{
 "base": "Node3D",
 "class": &"FPCamera",
 "language": &"GDScript",
-"path": "res://examples/scr/fp_camera.gd"
+"path": "res://examples/src/fp_camera.gd"
 }, {
 "base": "CharacterBody3D",
 "class": &"FPCharacter",
 "language": &"GDScript",
-"path": "res://examples/scr/fp_character.gd"
+"path": "res://examples/src/fp_character.gd"
 }, {
 "base": "Node3D",
 "class": &"Footsteps",
 "language": &"GDScript",
-"path": "res://addons/jc.footsteps/scr/footsteps.gd"
+"path": "res://addons/jc.footsteps/src/footsteps.gd"
 }, {
 "base": "FootstepsSurfaceAudio",
 "class": &"FootstepsSurface",
 "language": &"GDScript",
-"path": "res://addons/jc.footsteps/scr/footsteps_surface.gd"
+"path": "res://addons/jc.footsteps/src/footsteps_surface.gd"
 }, {
 "base": "Resource",
 "class": &"FootstepsSurfaceAudio",
 "language": &"GDScript",
-"path": "res://addons/jc.footsteps/scr/footsteps_surface_audio.gd"
+"path": "res://addons/jc.footsteps/src/footsteps_surface_audio.gd"
 }]
 _global_script_class_icons={
 "FPCamera": "",

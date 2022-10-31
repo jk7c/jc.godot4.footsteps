@@ -1,13 +1,13 @@
-[gd_scene load_steps=22 format=3 uid="uid://c1rh74yjtneb8"]
+[gd_scene load_steps=22 format=3]
 
 [ext_resource type="Texture2D" uid="uid://ds8tfs1v3gxpu" path="res://examples/content/third-party/kenney-assets/PNG/Green/texture_09.png" id="1_4j1d1"]
 [ext_resource type="Texture2D" uid="uid://dlemyiwrexxl8" path="res://examples/content/third-party/kenney-assets/PNG/Light/texture_07.png" id="2_nla2h"]
 [ext_resource type="Texture2D" uid="uid://qotptfx8xhdm" path="res://examples/content/third-party/kenney-assets/PNG/Orange/texture_09.png" id="3_ae5ro"]
-[ext_resource type="Script" path="res://addons/jc.footsteps/scr/footsteps.gd" id="3_xurbb"]
-[ext_resource type="Script" path="res://examples/scr/fp_character.gd" id="4_06q8q"]
+[ext_resource type="Script" path="res://addons/jc.footsteps/src/footsteps.gd" id="3_xurbb"]
+[ext_resource type="Script" path="res://examples/src/fp_character.gd" id="4_06q8q"]
 [ext_resource type="Resource" uid="uid://dhumwog0pdj20" path="res://examples/data/dirt_footsteps_surface.res" id="4_ciobp"]
 [ext_resource type="Resource" uid="uid://dx8bc7tp22l0g" path="res://examples/data/default_footsteps_surface_audio.res" id="4_ih820"]
-[ext_resource type="Script" path="res://examples/scr/fp_camera.gd" id="5_4c7tp"]
+[ext_resource type="Script" path="res://examples/src/fp_camera.gd" id="5_4c7tp"]
 [ext_resource type="Resource" uid="uid://cmaukrrm4t62h" path="res://examples/data/grass_footsteps_surface.res" id="5_edkw3"]
 [ext_resource type="Resource" uid="uid://cd7ber41g4hyx" path="res://examples/data/wood_footsteps_surface.res" id="6_lp8yi"]
 
