@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3]
+[gd_scene load_steps=22 format=3 uid="uid://dvu4b3e45i134"]
 
 [ext_resource type="Texture2D" uid="uid://ds8tfs1v3gxpu" path="res://examples/content/third-party/kenney-assets/PNG/Green/texture_09.png" id="1_4j1d1"]
 [ext_resource type="Texture2D" uid="uid://dlemyiwrexxl8" path="res://examples/content/third-party/kenney-assets/PNG/Light/texture_07.png" id="2_nla2h"]

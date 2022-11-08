@@ -87,6 +87,7 @@ var _min_unit_size: float
 var _max_unit_size: float
 var _min_pitch_range: float
 var _max_pitch_range: float
+var _enable_panner: bool
 
 func _enter_tree() -> void:
 	_character = get_parent() as CharacterBody3D
@@ -94,7 +95,8 @@ func _enter_tree() -> void:
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
-	_play(false)
+	_enable_panner = false
+	_play()
 
 func _physics_process(delta: float) -> void:
 	if Engine.is_editor_hint():
@@ -116,7 +118,8 @@ func _physics_process(delta: float) -> void:
 	if _character.is_on_floor():
 		_distance_travelled += _character.velocity.length() * delta
 		if _distance_travelled > _step:
-			_play(true)
+			_enable_panner = true
+			_play()
 			_distance_travelled = 0.0
 			_step = step_interval
 
@@ -138,25 +141,26 @@ func _get_ground_texture() -> Texture:
 		
 	return null
 
-func _play(panner: bool) -> void:
+func _play() -> void:
 	if audio_player == null:
 		return
 	
 	_current_surface_texture = _get_ground_texture()
 	if _current_surface_texture != null:
-		_play_surface_clips(panner)
+		_play_surface_clips()
 	else:
 		_default_surface = true
-		_play_default_clips(panner)
+		_play_default_clips()
 
 func _on_landing() -> void:
 	if audio_player == null:
 		return
 	
-	_play(false)
-	_play_audio_player(_current_landing_clip, false)
+	_enable_panner = false
+	_play()
+	_play_audio_player(_current_landing_clip)
 
-func _play_audio_player(clip: AudioStream, panner: bool) -> void:
+func _play_audio_player(clip: AudioStream) -> void:
 	audio_player.unit_size = _Random.randf_range(_min_unit_size, _max_unit_size)
 	audio_player.stream = clip
 	
@@ -164,7 +168,7 @@ func _play_audio_player(clip: AudioStream, panner: bool) -> void:
 	if enable_pan:
 		var fx: AudioEffectPanner = AudioServer.get_bus_effect(bus_index, pan_index) as AudioEffectPanner
 		if fx != null:
-			if panner:
+			if _enable_panner:
 				fx.pan = _pan_range - fx.pan - _pan_range
 				if fx.pan == 0.0:
 					fx.pan = _pan_range
@@ -179,7 +183,7 @@ func _play_audio_player(clip: AudioStream, panner: bool) -> void:
 	
 	audio_player.play()
 
-func _play_surface_clips(panner: bool) -> void:
+func _play_surface_clips() -> void:
 	if surfaces.size() > 0:
 		for surface in surfaces:
 			if surface.exists(_current_surface_texture):
@@ -193,12 +197,12 @@ func _play_surface_clips(panner: bool) -> void:
 				_current_landing_clip = surface.landing_clip
 				
 				var i: int = _Random.randi_range(0, surface.clips.size() - 1)
-				_play_audio_player(surface.clips[i], panner)
+				_play_audio_player(surface.clips[i])
 	else:
 		_default_surface = true
-		_play_default_clips(panner)
+		_play_default_clips()
 
-func _play_default_clips(panner: bool) -> void:
+func _play_default_clips() -> void:
 	if default_clips == null:
 		return
 	
@@ -211,7 +215,7 @@ func _play_default_clips(panner: bool) -> void:
 	_current_landing_clip = default_clips.landing_clip
 	
 	var i: int = _Random.randi_range(0, default_clips.clips.size() - 1)
-	_play_audio_player(default_clips.clips[i], panner)
+	_play_audio_player(default_clips.clips[i])
 
 func _get_property_list() -> Array:
 	var ret:= Array()
