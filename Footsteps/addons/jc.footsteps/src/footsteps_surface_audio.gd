@@ -2,7 +2,7 @@
 class_name FootstepsSurfaceAudio extends Resource
 
 @export_group("Clip Landing")
-@export var landing_clip: AudioStream = null
+@export var landing_clips: Array[AudioStream]
 
 @export_group("Clips List")
 @export var clips: Array[AudioStream]

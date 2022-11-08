@@ -53,6 +53,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		rotation.y -= mouseMotion.relative.x * mouse_sensitive
 		rotation.y = wrapf(rotation.y, 0.0, deg_to_rad(360.0))
 
+@warning_ignore(unused_parameter)
 func _process(delta: float) -> void:
 	if _player == null:
 		return
@@ -69,5 +70,6 @@ func _process(delta: float) -> void:
 	var fraction = clamp(Engine.get_physics_interpolation_fraction(), 0.0, 1.0)
 	global_position = _prev_tr.origin.lerp(_current_tr.origin, fraction)
 
+@warning_ignore(unused_parameter)
 func _physics_process(delta):
 	_is_fixed_update = true

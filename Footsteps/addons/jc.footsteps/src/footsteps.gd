@@ -194,10 +194,14 @@ func _play_surface_clips() -> void:
 				_min_pitch_range = surface.min_pitch_range
 				_max_pitch_range = surface.max_pitch_range
 				
-				_current_landing_clip = surface.landing_clip
+				if surface.landing_clips.size() > 0:
+					_current_landing_clip = surface.landing_clips[
+						_Random.randi_range(0, surface.landing_clips.size() - 1)
+					]
 				
-				var i: int = _Random.randi_range(0, surface.clips.size() - 1)
-				_play_audio_player(surface.clips[i])
+				_play_audio_player(
+					surface.clips[_Random.randi_range(0, surface.clips.size() - 1)]
+				)
 	else:
 		_default_surface = true
 		_play_default_clips()
@@ -212,10 +216,14 @@ func _play_default_clips() -> void:
 	_min_pitch_range = default_clips.min_pitch_range
 	_max_pitch_range = default_clips.max_pitch_range
 	
-	_current_landing_clip = default_clips.landing_clip
-	
-	var i: int = _Random.randi_range(0, default_clips.clips.size() - 1)
-	_play_audio_player(default_clips.clips[i])
+	if default_clips.landing_clips.size() > 0:
+		_current_landing_clip = default_clips.landing_clips[
+			_Random.randi_range(0, default_clips.landing_clips.size() - 1)
+		]
+		
+	_play_audio_player(
+		default_clips.clips[_Random.randi_range(0, default_clips.clips.size() - 1)]
+	)
 
 func _get_property_list() -> Array:
 	var ret:= Array()

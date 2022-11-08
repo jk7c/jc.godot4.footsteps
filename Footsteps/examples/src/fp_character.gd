@@ -61,12 +61,13 @@ func _ready() -> void:
 	max_slides = 6;
 
 func _unhandled_input(event: InputEvent) -> void:
-	_input_dir = Vector3(
-		Input.get_action_strength("move_right") - Input.get_action_strength("move_left"),
-		0.0,
-		Input.get_action_strength("move_back") - Input.get_action_strength("move_front")
-	)
-	_is_sprinting = Input.get_action_strength("sprint") > 0.0
+	if event is InputEventKey:
+		_input_dir = Vector3(
+			Input.get_action_strength("move_right") - Input.get_action_strength("move_left"),
+			0.0,
+			Input.get_action_strength("move_back") - Input.get_action_strength("move_front")
+		)
+		_is_sprinting = Input.get_action_strength("sprint") > 0.0
 
 func _compute_speed_mul() -> void:
 	_speed_mul = sprint_speed if _is_sprinting else walk_speed
@@ -85,7 +86,7 @@ func _yaw(delta: float) -> void:
 	var look:= Vector2(smd.z, smd.x)
 	
 	_strafe_move_dir = lerp(_strafe_move_dir, smd, delta * 45.0)
-	transform.basis = transform.basis.from_euler(Vector3.UP * look.angle())
+	transform.basis = Basis.from_euler(Vector3.UP * look.angle())
 
 func _physics_process(delta: float) -> void:
 	# Add gravity
@@ -108,4 +109,6 @@ func _physics_process(delta: float) -> void:
 			_jump()
 	
 	_yaw(delta)
+	
+	@warning_ignore(return_value_discarded)
 	move_and_slide()
