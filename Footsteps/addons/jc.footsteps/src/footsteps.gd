@@ -1,18 +1,17 @@
 @tool
 class_name Footsteps extends Node3D
 
-# Audio player.
 var audio_player: AudioStreamPlayer3D = null:
 	get: return audio_player
 	set(value):
 		audio_player = value
 
+## Default footsteps audio streams.
 var default_clips: FootstepsSurfaceAudio = null:
 	get: return default_clips
 	set(value):
 		default_clips = value
 
-# Surfaces.
 const DEFAULT_SURFACE_META_ID:= "surface"
 
 ## Surface ID for metadata.
@@ -28,7 +27,6 @@ var surface_meta_id: String = DEFAULT_SURFACE_META_ID:
 @export_subgroup("Surface")
 @export var surfaces: Array[FootstepsSurface]
 
-# Surface interval.
 @export_group("Step")
 
 ## Interval between each step.
@@ -48,46 +46,40 @@ var enable_pan: bool = false:
 		enable_pan = value
 		notify_property_list_changed()
 
-## Index of the pan fx.
 var pan_index: int = 0:
 	get: return pan_index
 	set(value):
 		pan_index = value
 
-## Enable pitch effect.
 var enable_pitch: bool = false:
 	get: return enable_pitch
 	set(value):
 		enable_pitch = value
 		notify_property_list_changed()
 
-## Index of the pitch fx.
 var pitch_index: int = 1:
 	get: return pitch_index
 	set(value):
 		pitch_index = value
 
-# Step.
-var _on_air_store: bool = false
+# Character body node.
+var _character: CharacterBody3D = null
+
 var _step: float
 var _distance_travelled: float
+var _is_on_air: bool = false
 
-# Current clips.
 var _current_landing_clip: AudioStream = null
 var _current_surface_texture: Texture = null
 
-# Nodes.
-var _character: CharacterBody3D = null
 var _Random:= RandomNumberGenerator.new()
-
-var _default_surface: bool = true
-var _physics_delta: float
+var _is_default_surface: bool = true
 var _pan_range: float
 var _min_unit_size: float
 var _max_unit_size: float
 var _min_pitch_range: float
 var _max_pitch_range: float
-var _enable_panner: bool
+var _panner_switch: bool
 
 func _enter_tree() -> void:
 	_character = get_parent() as CharacterBody3D
@@ -95,30 +87,28 @@ func _enter_tree() -> void:
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
-	_enable_panner = false
+	_panner_switch = false
 	_play()
 
 func _physics_process(delta: float) -> void:
 	if Engine.is_editor_hint():
 		return
 	
-	_physics_delta = delta
-	
 	if _character == null:
 		return
 	
 	if !_character.is_on_floor():
-		_on_air_store = true
+		_is_on_air = true
 	
-	if _character.is_on_floor() && _on_air_store:
+	if _character.is_on_floor() && _is_on_air:
 		_on_landing()
-		_on_air_store = false
+		_is_on_air = false
 
 	# Step.
 	if _character.is_on_floor():
 		_distance_travelled += _character.velocity.length() * delta
 		if _distance_travelled > _step:
-			_enable_panner = true
+			_panner_switch = true
 			_play()
 			_distance_travelled = 0.0
 			_step = step_interval
@@ -149,14 +139,14 @@ func _play() -> void:
 	if _current_surface_texture != null:
 		_play_surface_clips()
 	else:
-		_default_surface = true
+		_is_default_surface = true
 		_play_default_clips()
 
 func _on_landing() -> void:
 	if audio_player == null:
 		return
 	
-	_enable_panner = false
+	_panner_switch = false
 	_play()
 	_play_audio_player(_current_landing_clip)
 
@@ -169,7 +159,7 @@ func _play_audio_player(clip: AudioStream) -> void:
 	if enable_pan:
 		var fx: AudioEffectPanner = AudioServer.get_bus_effect(bus_index, pan_index) as AudioEffectPanner
 		if fx != null:
-			if _enable_panner:
+			if _panner_switch:
 				fx.pan = _pan_range - fx.pan - _pan_range
 				if fx.pan == 0.0:
 					fx.pan = _pan_range
@@ -188,7 +178,7 @@ func _play_surface_clips() -> void:
 	if surfaces.size() > 0:
 		for surface in surfaces:
 			if surface.exists(_current_surface_texture):
-				_default_surface = false
+				_is_default_surface = false
 				_min_unit_size = surface.min_unit_size
 				_max_unit_size = surface.max_unit_size
 				_pan_range = surface.pan_range
@@ -205,7 +195,7 @@ func _play_surface_clips() -> void:
 					surface.clips[_Random.randi_range(0, surface.clips.size() - 1)]
 				)
 	else:
-		_default_surface = true
+		_is_default_surface = true
 		_play_default_clips()
 
 func _play_default_clips() -> void:
