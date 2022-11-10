@@ -161,6 +161,7 @@ func _on_landing() -> void:
 	_play_audio_player(_current_landing_clip)
 
 func _play_audio_player(clip: AudioStream) -> void:
+	_Random.randomize()
 	audio_player.unit_size = _Random.randf_range(_min_unit_size, _max_unit_size)
 	audio_player.stream = clip
 	
@@ -194,6 +195,7 @@ func _play_surface_clips() -> void:
 				_min_pitch_range = surface.min_pitch_range
 				_max_pitch_range = surface.max_pitch_range
 				
+				_Random.randomize()
 				if surface.landing_clips.size() > 0:
 					_current_landing_clip = surface.landing_clips[
 						_Random.randi_range(0, surface.landing_clips.size() - 1)
@@ -216,6 +218,7 @@ func _play_default_clips() -> void:
 	_min_pitch_range = default_clips.min_pitch_range
 	_max_pitch_range = default_clips.max_pitch_range
 	
+	_Random.randomize()
 	if default_clips.landing_clips.size() > 0:
 		_current_landing_clip = default_clips.landing_clips[
 			_Random.randi_range(0, default_clips.landing_clips.size() - 1)
