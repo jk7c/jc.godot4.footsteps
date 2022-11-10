@@ -4,7 +4,7 @@ FP Footsteps for godot 4
 
 > C# Version:
 		
-		git clone --single-branch --branch C# https://github.com/jk7c/jc.godot4.footsteps.git
+		git clone --single-branch --branch main https://github.com/jk7c/jc.godot4.footsteps.git
 
 > GDScript Version:
 		
