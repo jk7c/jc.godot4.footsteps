@@ -18,10 +18,7 @@ const DEFAULT_SURFACE_META_ID:= "surface"
 var surface_meta_id: String = DEFAULT_SURFACE_META_ID:
 	get: return surface_meta_id
 	set(value):
-		if value == "":
-			surface_meta_id = DEFAULT_SURFACE_META_ID
-		else:
-			surface_meta_id = value
+		surface_meta_id = DEFAULT_SURFACE_META_ID if value == "" else value
 
 @export_group("Audio")
 @export_subgroup("Surface")
@@ -65,7 +62,6 @@ var pitch_index: int = 1:
 # Character body node.
 var _character: CharacterBody3D = null
 
-var _step: float
 var _distance_travelled: float
 var _is_on_air: bool = false
 
@@ -104,14 +100,13 @@ func _physics_process(delta: float) -> void:
 		_on_landing()
 		_is_on_air = false
 
-	# Step.
+	# Process step.
 	if _character.is_on_floor():
 		_distance_travelled += _character.velocity.length() * delta
-		if _distance_travelled > _step:
+		if _distance_travelled > step_interval:
 			_panner_switch = true
 			_play()
 			_distance_travelled = 0.0
-			_step = step_interval
 
 func _get_ground_texture() -> Texture:
 	var slideCollision
@@ -177,7 +172,8 @@ func _play_audio_player(clip: AudioStream) -> void:
 func _play_surface_clips() -> void:
 	if surfaces.size() > 0:
 		for surface in surfaces:
-			if surface.exists(_current_surface_texture):
+			#if surface.exists(_current_surface_texture):
+			if surface.surface_textures.has(_current_surface_texture):
 				_is_default_surface = false
 				_min_unit_size = surface.min_unit_size
 				_max_unit_size = surface.max_unit_size
